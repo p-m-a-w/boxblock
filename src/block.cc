@@ -1,4 +1,4 @@
-#include <block.hpp>
+#include "block.hpp"
 #include <memory>
 
 void hash_fn(char data[], char &output, size_t size) {
