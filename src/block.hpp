@@ -1,3 +1,5 @@
+#ifndef _BLOCK_HPP
+#define _BLOCK_HPP
 #include <cstddef>
 
 #define HASH_SIZE 1
@@ -14,3 +16,4 @@ typedef struct _block {
 void hash(block &);
 void link(block &, block &);
 bool validation(const block *);
+#endif
