@@ -1,3 +1,4 @@
+#include <cstring>
 #include "block.hpp"
 #include <memory>
 

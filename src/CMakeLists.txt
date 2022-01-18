@@ -3,6 +3,10 @@ add_library (block block.cc)
 add_subdirectory (json)
 include_directories (json/include)
 
+if (UNIX)
+  find_package (Threads)
+endif (UNIX)
+
 add_subdirectory (FTXUI)
 include_directories (FTXUI/include)
 
