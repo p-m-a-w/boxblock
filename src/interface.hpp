@@ -1,0 +1,1 @@
+void submitVote(int);

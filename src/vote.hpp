@@ -1,4 +1,0 @@
-/*
- * TODO:
- * Design voting system
- */
