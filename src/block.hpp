@@ -13,10 +13,6 @@ typedef struct _block {
     const _block *next = NULL;
 } block;
 
-block a = {
-    .data = itoa(a)
-};
-
 void hash(block &);
 void link(block &, block &);
 bool validation(const block *);
