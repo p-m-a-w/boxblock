@@ -10,29 +10,49 @@ void hash_fn(char data[], char &output, size_t size) {
     output = hash;
 }
 
-void hash(block &b) {
+block::block() {
+    this->hash();
+}
+
+block::block(const char *x) {
+    strcpy(this->data, x);
+    this->hash();
+}
+
+void block::hash() {
     char t[HASH_SIZE + DATA_SIZE] = {}, hash = 0;
-    memcpy(t, b.depend, HASH_SIZE);
-    memcpy(t + HASH_SIZE, b.data, DATA_SIZE);
+    memcpy(t, this->depend, HASH_SIZE);
+    memcpy(t + HASH_SIZE, this->data, DATA_SIZE);
     hash_fn(t, hash, HASH_SIZE + DATA_SIZE);
-    memcpy(b.hash, &hash, HASH_SIZE);
+    memcpy(this->c_hash, &hash, HASH_SIZE);
 }
 
-void link(block &current, block &prev) {
-    current.prev = &prev;
-    prev.next = &current;
-    memcpy(current.depend, prev.hash, HASH_SIZE);
-    hash(current);
+void block::link(block &prev) {
+    this->prev = &prev;
+    prev.next = this;
+    memcpy(this->depend, prev.c_hash, HASH_SIZE);
 }
 
-bool validation(const block *b) {
+bool block::validation(const block *b) {
     char t[HASH_SIZE + DATA_SIZE] = {}, hash = 0;
     memcpy(t, b->depend, HASH_SIZE);
     memcpy(t + HASH_SIZE, b->data, DATA_SIZE);
     hash_fn(t, hash, HASH_SIZE + DATA_SIZE);
 
-    bool result = !memcmp(&hash, b->hash, HASH_SIZE);
+    bool result = !memcmp(&hash, b->c_hash, HASH_SIZE);
     if (b->prev == NULL) return result;
     else if (!result) return result;
     else return result && validation(b->prev);
+}
+
+std::ifstream& operator>>(std::ifstream &in, block &b) {
+    for (int i = 0; i < HASH_SIZE; ++i) b.c_hash[i] = in.get();
+    for (int i = 0; i < DATA_SIZE; ++i) b.data[i] = in.get();
+    return in;
+}
+
+std::ofstream& operator<<(std::ofstream &out, block &b) {
+    for (int i = 0; i < HASH_SIZE; ++i) out.put(b.c_hash[i]);
+    for (int i = 0; i < DATA_SIZE; ++i) out.put(b.data[i]);
+    return out;
 }

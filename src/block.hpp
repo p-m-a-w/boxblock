@@ -1,19 +1,29 @@
 #ifndef _BLOCK_HPP
 #define _BLOCK_HPP
 #include <cstddef>
+#include <vector>
+#include <fstream>
 
-#define HASH_SIZE 1
-#define DATA_SIZE 32
+const size_t HASH_SIZE = 1;
+const size_t DATA_SIZE = 32;
 
-typedef struct _block {
-    char depend[HASH_SIZE] = {};
-    char data[DATA_SIZE] = {};
-    char hash[HASH_SIZE] = {};
-    const _block *prev = NULL;
-    const _block *next = NULL;
-} block;
+class block {
+        char depend[HASH_SIZE] = {}, c_hash[HASH_SIZE] = {};
+    protected:
+        block *prev = NULL, *next = NULL;
+    public:
+        char data[DATA_SIZE] = {};
+        block();
+        block(const char *);
+        void hash();
+        void link(block &);
+        static bool validation(const block *);
 
-void hash(block &);
-void link(block &, block &);
-bool validation(const block *);
+        friend std::ifstream& operator>>(std::ifstream &, block &);
+        friend std::ofstream& operator<<(std::ofstream &, block &);
+};
+
+void getline(std::ifstream&, block&);
+std::ifstream& operator>>(std::ifstream &, block &);
+std::ofstream& operator<<(std::ofstream &, block &);
 #endif
