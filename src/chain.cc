@@ -1,12 +1,21 @@
 #include "chain.hpp"
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <cstdio>
+#include <string>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 bool starterDataCheck(const string filename) {
-    // แนะนำ function stat https://pubs.opengroup.org/onlinepubs/009696799/functions/stat.html
+    struct stat Buff = {};
+    return stat(filename.c_str(), &Buff) == 0; // Check ว่ามี File อยู่ไหม
 }
 
 void createChainFile(const string filename, const vector<block> &chain) {
     // แนะนำให้ใช้ ofstream สร้างไฟล์เอา
     // ละอาจจะใช้ for(const block &b : chain) o_stream << b << "\n";
+
 }
 
 void addBlockToChain(block, vector<block> &chain) {

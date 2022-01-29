@@ -1,20 +1,16 @@
-#include "block.hpp"
+#include "chain.hpp"
 #include <iostream>
 #include <fstream>
+#include <string>
+
+using namespace std;
 
 int main(int argc, const char* argv[]) {
-    bool in = true;
-    block a;
-    if (in) {
-        std::ifstream s("test.txt");
-        s >> a;
-    } else {
-        std::ofstream s("test.txt");
-        a = block("333");
-        s << a;
-    }
+    
+    string filename = "test.txt";
+    if(starterDataCheck(filename)){
+        return 32;
+    }// ลอง function StarterDataCheck
 
-    std::cout << a.data << " ";
-    std::cout << block::validation(&a);
     return 0;
 }
