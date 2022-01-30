@@ -7,7 +7,7 @@ endif (UNIX)
 add_subdirectory (FTXUI)
 include_directories (FTXUI/include)
 
-add_executable (${PROJECT_NAME} main.cc block chain.cc)
+add_executable (${PROJECT_NAME} main.cc block chain.cc ui.cc)
 target_link_libraries(${PROJECT_NAME}
   PRIVATE ftxui::screen
   PRIVATE ftxui::dom

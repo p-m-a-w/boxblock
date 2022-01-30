@@ -1,6 +1,7 @@
+![BoxBlock cover](cover.png "BoxBlock")
 # BoxBlock
 BoxBlock is free and open-source blockchain implementation for election
-## Buliding
+## How to build
 ```console
 $ git clone --recurse-submodules https://github.com/p-m-a-w/boxblock
 $ cd boxblock
