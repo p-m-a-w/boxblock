@@ -12,5 +12,6 @@ int main(int argc, const char* argv[]) {
         return 32;
     }// ลอง function StarterDataCheck
 
+
     return 0;
 }
