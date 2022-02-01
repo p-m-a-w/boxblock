@@ -13,6 +13,7 @@
 #include "ftxui/component/screen_interactive.hpp"  // for ScreenInteractive
 #include "ftxui/dom/canvas.hpp"                    // for Canvas
 #include "ftxui/screen/color.hpp"  // for Color, Color::Red, Color::Blue, Color::Green, ftxui
+#include "ftxui/dom/node.hpp"      // for Render
 
 #include <unistd.h>
 #include <csignal>
@@ -28,20 +29,37 @@ void drawBlockBox(Canvas &c, float brigtness) {
     }
 }
 
+Element drawpp(Canvas &c) {
+    //c.DrawText(30, 30, "Vote");
+    std::vector<std::string> radiobox_list = {
+      "Use gcc",
+      "Use clang",
+      "Use emscripten",
+      "Use tcc",
+  };
+  int selected = 0;
+  auto x = Radiobox(&radiobox_list, &selected);
+  return hbox({
+      x->Render(),
+    //   separator(),
+    //   c->Render(),
+  });
+}
+
 int main(int argc, const char* argv[]) {
 
     auto c = Canvas(100, 100);
 
     auto document = canvas(&c) | border;
 
-    float k = 1;
+    int k = 1;
     auto comp = Renderer([&] {
-        drawBlockBox(c, k);
-        usleep(100 * 1000);
-        if (k >= 0) std::raise(SIGWINCH);
-        k -= 0.0125;
-        return canvas(std::move(&c));
+        // drawBlockBox(c, 1.0);
+        
+
+        return drawpp(c);
     });
+    
 
     auto screen = ScreenInteractive::TerminalOutput();
     screen.Loop(comp);

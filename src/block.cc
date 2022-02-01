@@ -56,3 +56,7 @@ std::ofstream& operator<<(std::ofstream &out, block &b) {
     for (int i = 0; i < DATA_SIZE; ++i) out.put(b.data[i]);
     return out;
 }
+
+void getline(std::ifstream &c, block &b) {
+    c >> b;
+}
