@@ -20,10 +20,10 @@ class block {
         static bool validation(const block *);
 
         friend std::ifstream& operator>>(std::ifstream &, block &);
-        friend std::ofstream& operator<<(std::ofstream &, block &);
+        friend std::ofstream& operator<<(std::ofstream &, const block &);
 };
 
 void getline(std::ifstream&, block&);
-std::ifstream& operator>>(std::ifstream &, block &);
-std::ofstream& operator<<(std::ofstream &, block &);
+std::ifstream& operator>>(std::ifstream &, const block &);
+std::ofstream& operator<<(std::ofstream &, const block &);
 #endif

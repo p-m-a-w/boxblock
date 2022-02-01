@@ -51,7 +51,7 @@ std::ifstream& operator>>(std::ifstream &in, block &b) {
     return in;
 }
 
-std::ofstream& operator<<(std::ofstream &out, block &b) {
+std::ofstream& operator<<(std::ofstream &out, const block &b) {
     for (int i = 0; i < HASH_SIZE; ++i) out.put(b.c_hash[i]);
     for (int i = 0; i < DATA_SIZE; ++i) out.put(b.data[i]);
     return out;

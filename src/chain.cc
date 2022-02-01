@@ -1,4 +1,5 @@
 #include "chain.hpp"
+#include "block.hpp"
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -6,16 +7,19 @@
 #include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <cstdint>
 
 bool starterDataCheck(const string filename) {
     struct stat Buff = {};
-    return stat(filename.c_str(), &Buff) == 0; // Check ว่ามี File อยู่ไหม
+    return stat(filename.c_str(), &Buff) == 0; // Check ว่ามี File อยู่ไหม, return true มี / false ไม่มี 
 }
 
-void createChainFile(const string filename, const vector<block> &chain) {
+void createChainFile(const string filename, vector<block> &chain) {
     // แนะนำให้ใช้ ofstream สร้างไฟล์เอา
     // ละอาจจะใช้ for(const block &b : chain) o_stream << b << "\n";
-
+    ofstream source;
+    source.open(filename);
+    for(block &a : chain) source << a << endl;
 }
 
 void addBlockToChain(block current, vector<block> &chain) {
