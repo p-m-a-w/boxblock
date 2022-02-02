@@ -6,19 +6,16 @@
 #include "ftxui/component/screen_interactive.hpp"
 #include "ftxui/component/component.hpp"
 
-using namespace ftxui;
-
-Component vote(std::vector<std::string> &list, int &vote) {
-    return Radiobox(&list, &vote);
-}
-
 int main(int argc, const char* argv[]) {
     float brightness_step = 10.0 / 1618.0, splash_brigtness = 1.0f + brightness_step;
     int selected_scene = 0, choice = 0;
     auto screen = ScreenInteractive::FixedSize(WIDTH / 1.9, HEIGHT / 4);
     std::vector<std::string> candidates = {
-        "Nandemonaiya",
-        "Jihoy",
+        "No vote",
+        "Khun A",
+        "Khun B",
+        "Khun C",
+        "Khun D",
     };
 
     auto current_scene = Container::Tab({
@@ -33,9 +30,9 @@ int main(int argc, const char* argv[]) {
             if (splash_brigtness > 0.0) splash_brigtness -= brightness_step;
             else selected_scene++;
         } else if (selected_scene == 1) {
-        } else if (selected_scene == 2) {
-            // TODO: next scene go here
+            // TODO: implement checking function
         }
+
         return hbox({
             current_scene->Render()
         }) | border;
