@@ -8,7 +8,7 @@
 
 int main(int argc, const char* argv[]) {
     float brightness_step = 10.0 / 1618.0, splash_brigtness = 1.0f + brightness_step;
-    int selected_scene = 0, choice = 0;
+    int selected_scene = 2, choice = 0;
     auto screen = ScreenInteractive::FixedSize(WIDTH / 1.9, HEIGHT / 4);
     std::vector<std::string> candidates = {
         "No vote",
@@ -21,7 +21,7 @@ int main(int argc, const char* argv[]) {
     auto current_scene = Container::Tab({
         scene::splash(splash_brigtness),
         scene::vote(candidates, choice, screen),
-        scene::error(screen),
+        scene::error(screen, selected_scene),
     }, &selected_scene);
     auto component = Renderer(current_scene, [&] {
         if (selected_scene == 0) {

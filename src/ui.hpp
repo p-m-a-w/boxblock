@@ -7,6 +7,6 @@ using namespace ftxui;
 namespace scene {
     Component splash(float &brightness); // หน้าโชว์โลโก้
     Component vote(std::vector<std::string> &list, int &vote, ScreenInteractive &screen); // หน้าโหวต
-    Component error(ScreenInteractive &screen); // หน้า error
+    Component error(ScreenInteractive &screen , int &sselected_scene); // หน้า error
     Component recent();
 }

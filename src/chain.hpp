@@ -5,6 +5,7 @@
 #include "block.hpp"
 
 using namespace std;
+#define FILENAME "BoxBlock.data"
 
 bool starterDataCheck(const string filename); //
 void createChainFile(const string filename, const vector<block> &chain); // เปลี่ยนเชนออกเป็นไฟล์ aka export
