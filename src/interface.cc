@@ -14,3 +14,13 @@ vector<block> loadRecentChain(int n ,const vector<block> &chain){
         recent.push_back(chain[i]);
     return recent;
 }
+
+vector<int> summary(const vector<block> &chain){
+    vector<int> totalSum = {0,0,0,0,0};
+
+        for(const block &b : chain){
+            totalSum[atoi(b.data)]++;
+        }
+
+    return totalSum;
+}
