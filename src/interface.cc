@@ -4,8 +4,7 @@
 void submitVote(int choice, vector<block> &chain){
     char data[DATA_SIZE] = {};
     data[0] = '0' + choice;
-    block vote(data);
-    addBlockToChain(vote, chain);
+    addBlockToChain(block(data), chain);
 }
 
 vector<block> loadRecentChain(int n ,const vector<block> &chain){

@@ -14,37 +14,33 @@ bool starterDataCheck(const string filename) {
     return stat(filename.c_str(), &Buff) == 0; // Check ว่ามี File อยู่ไหม, return true มี / false ไม่มี 
 }
 
-void createChainFile(const string filename, vector<block> &chain) {
+void createChainFile(const string filename, const vector<block> &chain) {
     // แนะนำให้ใช้ ofstream สร้างไฟล์เอา
     // ละอาจจะใช้ for(const block &b : chain) o_stream << b << "\n";
     ofstream source;
     source.open(filename);
-    for(block &a : chain) source << a << endl;
+    for(const block &a : chain) source << a << endl;
 }
 
 void addBlockToChain(block current, vector<block> &chain) {
-    // link แล้ว hash แล้ว push_back เลยครับ
-    current.link(chain.back());
+    block *x = chain.size() ? &chain.back() : NULL;
     chain.push_back(current);
+    if (x) chain.back().link(*x);
 }
 
 void importChain(const string filename, vector<block> &chain) {
-    // แนะนำให้ใช้ ifstream แล้ว getline แต่ละบรรทัด
-    // โดยใช้ฟังก์ชั่น getline(ifstream, block&); โดยให้ link ก่อนแล้วค่อย push_back
-    block PresentBlock;
-    ifstream Newfile(filename);
-    getline(Newfile,PresentBlock);
-    if(chain.size()==0){
-        chain.push_back(PresentBlock);
-    }else{
-        PresentBlock.link(chain.back());
-        chain.push_back(PresentBlock);
+    chain.clear();
+    ifstream s(filename);
+    block empty, data;
+    for (s >> data; !memcmp(&empty, &data, sizeof(block)); s >> data) {
+        block *x = chain.size() ? &chain.back() : NULL;
+        chain.push_back(data);
+        if (x) chain.back().link(*x);
     }
 }
 
 bool hashCheck(const vector<block> &chain) {
-    // ใช้ validation บนตัวสุดท้ายของเชน
-    return block :: validation(&chain.back());
+    return (chain.size()) ? block::validation(&chain.back()) : true; // because empty always valid
 }
 
 void deleteChain(const string filename) {

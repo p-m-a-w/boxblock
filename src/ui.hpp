@@ -1,12 +1,20 @@
 #pragma once
+#include "chain.hpp"
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/screen_interactive.hpp"
 #define WIDTH  100
 #define HEIGHT 100
 using namespace ftxui;
-namespace scene {
+
+typedef struct {
+    ScreenInteractive *screen;
+    int *selected_scene;
+    int *vote;
+} SceneConfiguration;
+
+namespace Scene {
     Component splash(float &brightness); // หน้าโชว์โลโก้
-    Component vote(std::vector<std::string> &list, int &vote, ScreenInteractive &screen); // หน้าโหวต
-    Component error(ScreenInteractive &screen , int &sselected_scene); // หน้า error
-    Component recent();
+    Component vote(SceneConfiguration &config, const vector<std::string> &list, vector<block> &chain); // หน้าโหวต
+    Component error(SceneConfiguration &config); // หน้า error
+    // Component summary(SceneConfiguration &config, const vector<std::string> &list, const vector<block> &chain);
 }

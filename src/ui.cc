@@ -1,8 +1,8 @@
 #include "ui.hpp"
 #include "image.hpp"
-#include "chain.hpp"
+#include "interface.hpp"
 
-Component scene::splash(float &brightness) { // หน้าโชว์โลโก้
+Component Scene::splash(float &brightness) { // หน้าโชว์โลโก้
     return Renderer([&] {
         auto c = Canvas(WIDTH, HEIGHT);
         for (int x = 0; x < WIDTH; ++x) {
@@ -15,32 +15,32 @@ Component scene::splash(float &brightness) { // หน้าโชว์โล�
     });
 }
 
-Component scene::vote(std::vector<std::string> &list, int &vote, ScreenInteractive &screen) { // หน้าโหวต
+Component Scene::vote(SceneConfiguration &config, const std::vector<std::string> &list, vector<block> &chain) { // หน้าโหวต
     // ทำตัวโชว์บล๊อกแล้วก็ตัวเลือกตามที่ design เลยครับ
     // โดยอาจจะใช้ radiobox(แนะนำ) หรือ checkbox ก็ได้
     // แล้วทำปุ่ม submit
-    static auto show_choices = Radiobox(&list, &vote);
-    static std::string exit_label = "Submit", reset_label = "Klear";
-    static auto submit = Button(&exit_label, screen.ExitLoopClosure());
-    static auto clear = Button(&reset_label, [&] {
-        vote = 0;
+    static auto show_choices = Radiobox(&list, config.vote);
+    static std::string submit_label = "Submit", exit_label = "Exit";
+    static auto submit = Button(&submit_label, [&] {
+        submitVote(*(config.vote), chain);
     });
+    static auto exit = Button(&exit_label, config.screen->ExitLoopClosure());
     static auto layout = Container::Vertical({
         show_choices,
         submit,
-        clear,
+        exit,
     });
     return Renderer(layout, [&] {
         return hbox({
             vbox({
-                text("Chop pleng arai?"),
+                text("Who would you like to vote?"),
                 separator(),
                 show_choices->Render(),
                 separator(),
                 hbox({
                     submit->Render(),
                     separator(),
-                    clear->Render(),
+                    exit->Render(),
                 })
             }),
         });
@@ -50,12 +50,12 @@ Component scene::vote(std::vector<std::string> &list, int &vote, ScreenInteracti
     // button: https://arthursonzogni.github.io/FTXUI/examples_2component_2gallery_8cpp-example.html (สังเหตุตรง button)
 }
 
-Component scene::error(ScreenInteractive &screen , int &sselected_scene) { // หน้า error
+Component Scene::error(SceneConfiguration &config) { // หน้า error
     static std::string exit_label = "Exit", reset_label = "Reset";
-    static auto exit = Button(&exit_label, screen.ExitLoopClosure());
+    static auto exit = Button(&exit_label, config.screen->ExitLoopClosure());
     static auto reset = Button(&reset_label, [&] {
         deleteChain(FILENAME);
-        sselected_scene = 1;
+        *config.selected_scene = 1;
     });
     static auto layout = Container::Horizontal({
         reset,
@@ -80,11 +80,11 @@ Component scene::error(ScreenInteractive &screen , int &sselected_scene) { // �
     // exit: https://pubs.opengroup.org/onlinepubs/7908799/xsh/exit.html
 }
 
-Component scene::recent() { // หน้า error
-    return Renderer([&] {
-        return text("ABC!");
-    });
-    // ทำตาม design แล้วค่อยให้เรียก function ตาม user เลือกก็ได้
-    // เช่น user ต้องการออกก็อาจจะใช้ exit(0); หรือต้องการ reset ก็ใช้ ...
-    // exit: https://pubs.opengroup.org/onlinepubs/7908799/xsh/exit.html
-}
+// Component Scene::summary(SceneConfiguration &config, const std::vector<std::string> &list, const vector<block> &chain) { // หน้า error
+//     return Renderer([&] {
+//         return text("ABC!");
+//     });
+//     // ทำตาม design แล้วค่อยให้เรียก function ตาม user เลือกก็ได้
+//     // เช่น user ต้องการออกก็อาจจะใช้ exit(0); หรือต้องการ reset ก็ใช้ ...
+//     // exit: https://pubs.opengroup.org/onlinepubs/7908799/xsh/exit.html
+// }

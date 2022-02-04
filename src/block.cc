@@ -4,7 +4,7 @@
 
 void hash_fn(char data[], char &output, size_t size) {
     char hash = 0;
-    for (int i = 0; i < size; ++i) {
+    for (unsigned int i = 0; i < size; ++i) {
         hash ^= data[i];
     }
     output = hash;
@@ -46,17 +46,13 @@ bool block::validation(const block *b) {
 }
 
 std::ifstream& operator>>(std::ifstream &in, block &b) {
-    for (int i = 0; i < HASH_SIZE; ++i) b.c_hash[i] = in.get();
-    for (int i = 0; i < DATA_SIZE; ++i) b.data[i] = in.get();
+    for (unsigned int i = 0; i < HASH_SIZE; ++i) b.c_hash[i] = in.get();
+    for (unsigned int i = 0; i < DATA_SIZE; ++i) b.data[i] = in.get();
     return in;
 }
 
 std::ofstream& operator<<(std::ofstream &out, const block &b) {
-    for (int i = 0; i < HASH_SIZE; ++i) out.put(b.c_hash[i]);
-    for (int i = 0; i < DATA_SIZE; ++i) out.put(b.data[i]);
+    for (unsigned int i = 0; i < HASH_SIZE; ++i) out.put(b.c_hash[i]);
+    for (unsigned int i = 0; i < DATA_SIZE; ++i) out.put(b.data[i]);
     return out;
-}
-
-void getline(std::ifstream &c, block &b) {
-    c >> b;
 }

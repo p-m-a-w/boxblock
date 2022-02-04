@@ -23,7 +23,6 @@ class block {
         friend std::ofstream& operator<<(std::ofstream &, const block &);
 };
 
-void getline(std::ifstream&, block&);
 std::ifstream& operator>>(std::ifstream &, const block &);
 std::ofstream& operator<<(std::ofstream &, const block &);
 #endif
