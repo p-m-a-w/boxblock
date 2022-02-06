@@ -2,8 +2,8 @@
 #include "chain.hpp"
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/screen_interactive.hpp"
-#define WIDTH  100
-#define HEIGHT 100
+#define _WIDTH  100
+#define _HEIGHT 100
 using namespace ftxui;
 
 typedef struct {
@@ -18,3 +18,4 @@ namespace Scene {
     Component error(SceneConfiguration &config,vector<block> &chain); // หน้า error
     Component summary(SceneConfiguration &config, const vector<std::string> &list, const vector<block> &chain);
 }
+// }

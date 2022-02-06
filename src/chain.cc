@@ -16,28 +16,31 @@ bool starterDataCheck(const string filename) {
 }
 
 void createChainFile(const string filename, const vector<block> &chain) {
-    deleteChain(filename);
     ofstream source;
+    deleteChain(filename);
     source.open(filename);
-    for(const auto &a: chain)source <<  a << endl;
+    for(const auto &a: chain) {
+        source << a << endl;
+    }
     source.close();
 }
 
-void addBlockToChain(block current, vector<block> &chain) {
-    block *x = chain.size() ? &chain.back() : NULL;
+inline void chain_push_back(block current, vector<block> &chain, bool hash = false) {
     chain.push_back(current);
-    if (x) chain.back().link(*x);
+    if (chain.size() > 1) chain.end()[-1].link(chain.end()[-2]);
+    if (hash) chain.back().hash();
 }
 
-void importChain(const string filename, vector<block> &chain) {
-    chain.clear();
-    ifstream s(filename);
-    block empty, data;
-    for (s >> data; !memcmp(&empty, &data, sizeof(block)); s >> data) {
-        block *x = chain.size() ? &chain.back() : NULL;
-        chain.push_back(data);
-        if (x) chain.back().link(*x);
-    }
+void addBlockToChain(block current, vector<block> &chain) {
+    chain_push_back(current, chain, true);
+}
+
+void importChain(const string filename, vector<block> &chain, bool clear) {
+    ifstream input(filename);
+    block c_data;
+    if (clear) chain.clear();
+    while (getline(input, c_data)) chain_push_back(c_data, chain);
+    input.close();
 }
 
 bool hashCheck(const vector<block> &chain) {
@@ -45,7 +48,6 @@ bool hashCheck(const vector<block> &chain) {
 }
 
 void deleteChain(const string filename) {
-    // include cstdio แล้วใช้ฟังก์ชั่น remove ก็ได้นะ
     remove(filename.c_str());
 }
 

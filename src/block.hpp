@@ -8,7 +8,7 @@ const size_t HASH_SIZE = 1;
 const size_t DATA_SIZE = 32;
 
 class block {
-        char depend[HASH_SIZE] = {}, c_hash[HASH_SIZE] = {};
+        char p_hash[HASH_SIZE] = {}, c_hash[HASH_SIZE] = {};
     protected:
         block *prev = NULL, *next = NULL;
     public:
@@ -21,8 +21,10 @@ class block {
 
         friend std::ifstream& operator>>(std::ifstream &, block &);
         friend std::ofstream& operator<<(std::ofstream &, const block &);
+        friend bool getline(std::ifstream &, block &);
 };
 
 std::ifstream& operator>>(std::ifstream &, const block &);
 std::ofstream& operator<<(std::ofstream &, const block &);
+bool getline(std::ifstream &, block &);
 #endif

@@ -21,7 +21,7 @@ block::block(const char *x) {
 
 void block::hash() {
     char t[HASH_SIZE + DATA_SIZE] = {}, hash = 0;
-    memcpy(t, this->depend, HASH_SIZE);
+    memcpy(t, this->p_hash, HASH_SIZE);
     memcpy(t + HASH_SIZE, this->data, DATA_SIZE);
     hash_fn(t, hash, HASH_SIZE + DATA_SIZE);
     memcpy(this->c_hash, &hash, HASH_SIZE);
@@ -30,12 +30,12 @@ void block::hash() {
 void block::link(block &prev) {
     this->prev = &prev;
     prev.next = this;
-    memcpy(this->depend, prev.c_hash, HASH_SIZE);
+    memcpy(this->p_hash, prev.c_hash, HASH_SIZE);
 }
 
 bool block::validation(const block *b) {
     char t[HASH_SIZE + DATA_SIZE] = {}, hash = 0;
-    memcpy(t, b->depend, HASH_SIZE);
+    memcpy(t, b->p_hash, HASH_SIZE);
     memcpy(t + HASH_SIZE, b->data, DATA_SIZE);
     hash_fn(t, hash, HASH_SIZE + DATA_SIZE);
 
@@ -45,14 +45,29 @@ bool block::validation(const block *b) {
     else return result && validation(b->prev);
 }
 
+/*
+  Data structure:
+  *---------------------------------*
+  | prev_hash | current_hash | data |
+  *---------------------------------*
+*/
+
 std::ifstream& operator>>(std::ifstream &in, block &b) {
+    for (unsigned int i = 0; i < HASH_SIZE; ++i) b.p_hash[i] = in.get();
     for (unsigned int i = 0; i < HASH_SIZE; ++i) b.c_hash[i] = in.get();
     for (unsigned int i = 0; i < DATA_SIZE; ++i) b.data[i] = in.get();
     return in;
 }
 
 std::ofstream& operator<<(std::ofstream &out, const block &b) {
+    for (unsigned int i = 0; i < HASH_SIZE; ++i) out.put(b.p_hash[i]);
     for (unsigned int i = 0; i < HASH_SIZE; ++i) out.put(b.c_hash[i]);
     for (unsigned int i = 0; i < DATA_SIZE; ++i) out.put(b.data[i]);
     return out;
+}
+
+bool getline(std::ifstream &in, block &b) {
+    block c_data;
+    in >> b;
+    return in.get() == '\n';
 }

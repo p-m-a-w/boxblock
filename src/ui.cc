@@ -4,25 +4,23 @@
 
 Component Scene::splash(float &brightness) { // หน้าโชว์โลโก้
     return Renderer([&] {
-        auto c = Canvas(WIDTH, HEIGHT);
-        for (int x = 0; x < WIDTH; ++x) {
-            for (int y = 0; y < HEIGHT; ++y) {
+        auto c = Canvas(_WIDTH, _HEIGHT);
+        for (int x = 0; x < _WIDTH; ++x) {
+            for (int y = 0; y < _HEIGHT; ++y) {
                 unsigned char color = SPLASH[y][x] * brightness;
-                if (color != 0) c.DrawPoint(x, (y * 2) - (HEIGHT / 2), true, Color(color, color, color));
+                if (color != 0) c.DrawPoint(x, (y * 2) - (_HEIGHT / 2), true, Color(color, color, color));
             }
         }
         return canvas(std::move(c));
     });
 }
 
-Component Scene::vote(SceneConfiguration &config, const std::vector<std::string> &list, vector<block> &chain) { // หน้าโหวต
-    // ทำตัวโชว์บล๊อกแล้วก็ตัวเลือกตามที่ design เลยครับ
-    // โดยอาจจะใช้ radiobox(แนะนำ) หรือ checkbox ก็ได้
-    // แล้วทำปุ่ม submit
+Component Scene::vote(SceneConfiguration &config, const std::vector<std::string> &list, vector<block> &chain) {
     static auto show_choices = Radiobox(&list, config.vote);
     static std::string submit_label = "Submit", exit_label = "Exit";
     static auto submit = Button(&submit_label, [&] {
         submitVote(*(config.vote), chain);
+        *(config.selected_scene) = 3;
     });
     static auto exit = Button(&exit_label, config.screen->ExitLoopClosure());
     static auto layout = Container::Vertical({
@@ -31,23 +29,17 @@ Component Scene::vote(SceneConfiguration &config, const std::vector<std::string>
         exit,
     });
     return Renderer(layout, [&] {
-        return hbox({
-            vbox({
-                text("Who would you like to vote?"),
-                separator(),
-                show_choices->Render(),
-                separator(),
-                hbox({
-                    submit->Render(),
-                    separator(),
-                    exit->Render(),
-                })
-            }),
-        });
+        return vbox({
+            text("Who would you like to vote?") | hcenter,
+            separator(),
+            show_choices->Render() | hcenter,
+            separator(),
+            hbox({
+                submit->Render(),
+                exit->Render(),
+            }) | hcenter,
+        }) | size(WIDTH, EQUAL, _WIDTH);
     });
-    // radiobox: https://arthursonzogni.github.io/FTXUI/examples_2component_2radiobox_8cpp-example.html
-    // checkbox: https://arthursonzogni.github.io/FTXUI/examples_2component_2checkbox_8cpp-example.html
-    // button: https://arthursonzogni.github.io/FTXUI/examples_2component_2gallery_8cpp-example.html (สังเหตุตรง button)
 }
 
 Component Scene::error(SceneConfiguration &config,vector<block> &chain) { // หน้า error
@@ -64,49 +56,59 @@ Component Scene::error(SceneConfiguration &config,vector<block> &chain) { // ห
         exit,
     });
     return Renderer(layout, [&] {
-        return hbox({
-            vbox({
-                text("Invalid Chain"),
-                text("Do you want to reset the Chain?"),
-                separator(),
-                hbox({
-                    reset->Render(),
-                    separator(),
-                    exit->Render(),
-                })
-            }),
-        });
+        return vbox({
+            text("Invalid Chain") | hcenter,
+            text("Do you want to reset the Chain?") | hcenter,
+            separator(),
+            hbox({
+                reset->Render(),
+                exit->Render(),
+            }) | hcenter
+        }) | size(WIDTH, EQUAL, _WIDTH);
     });
-    // ทำตาม design แล้วค่อยให้เรียก function ตาม user เลือกก็ได้
-    // เช่น user ต้องการออกก็อาจจะใช้ exit(0); หรือต้องการ reset ก็ใช้ ...
-    // exit: https://pubs.opengroup.org/onlinepubs/7908799/xsh/exit.html
+}
+
+Element result_bar(string title, float x) {
+    return hbox({
+        text(title) | size(WIDTH, EQUAL, 10) | hcenter,
+        separator(),
+        gauge(x),
+    }) | size(WIDTH, EQUAL, _WIDTH);
 }
 
 Component Scene::summary(SceneConfiguration &config, const std::vector<std::string> &list, const vector<block> &chain) {
-    static vector<int>count = countVote(chain);
     static int n = 0;
+    static vector<Element> elements;
+    static string back_label("Back");
+    static auto back = Button(&back_label, [&] {
+        *config.selected_scene = 1;
+    });
+    static vector<int> count = countVote(chain);
     for (const auto &b : count)
         n = n+b;
-    static vector<Component> components;
     for (int i = 0; i<5 ; i++ )
-        components.push_back(Slider(list[i],&count[i],0,n,0));
-    static auto layout = Container::Vertical({
-        components[0],
-        components[1],
-        components[2],
-        components[3],
-        components[4],
-    });
-    return Renderer(layout, [&] {
-        return vbox({  
-            components[0]->Render(),
-            components[1]->Render(),
-            components[2]->Render(),
-            components[3]->Render(),
-            components[4]->Render(),
+        elements.push_back(result_bar(list[i], 0.5));
+
+    return Renderer(back, [&] {
+        n = 0;
+        count = countVote(chain);
+        for (const auto &b : count)
+            n = n+b;
+        for (int i = 0; i<5 ; i++ )
+            elements[i] = result_bar(list[i], (float)count[i] / n);
+
+        return vbox({ 
+            elements[0],
+            separator(),
+            elements[1],
+            separator(),
+            elements[2],
+            separator(),
+            elements[3],
+            separator(),
+            elements[4],
+            separator(),
+            back->Render() | hcenter
         });
     });
-    // ทำตาม design แล้วค่อยให้เรียก function ตาม user เลือกก็ได้
-    // เช่น user ต้องการออกก็อาจจะใช้ exit(0); หรือต้องการ reset ก็ใช้ ...
-    // exit: https://pubs.opengroup.org/onlinepubs/7908799/xsh/exit.html
 }
