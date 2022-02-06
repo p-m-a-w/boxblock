@@ -80,11 +80,31 @@ Component Scene::error(SceneConfiguration &config) { // หน้า error
     // exit: https://pubs.opengroup.org/onlinepubs/7908799/xsh/exit.html
 }
 
-// Component Scene::summary(SceneConfiguration &config, const std::vector<std::string> &list, const vector<block> &chain) { // หน้า error
-//     return Renderer([&] {
-//         return text("ABC!");
-//     });
-//     // ทำตาม design แล้วค่อยให้เรียก function ตาม user เลือกก็ได้
-//     // เช่น user ต้องการออกก็อาจจะใช้ exit(0); หรือต้องการ reset ก็ใช้ ...
-//     // exit: https://pubs.opengroup.org/onlinepubs/7908799/xsh/exit.html
-// }
+Component Scene::summary(SceneConfiguration &config, const std::vector<std::string> &list, const vector<block> &chain) {
+    static vector<int>count = countVote(chain);
+    static int n = 0;
+    for (const auto &b : count)
+        n = n+b;
+    static vector<Component> components;
+    for (int i = 0; i<5 ; i++ )
+        components.push_back(Slider(list[i],&count[i],0,n,0));
+    static auto layout = Container::Vertical({
+        components[0],
+        components[1],
+        components[2],
+        components[3],
+        components[4],
+    });
+    return Renderer(layout, [&] {
+        return vbox({  
+            components[0]->Render(),
+            components[1]->Render(),
+            components[2]->Render(),
+            components[3]->Render(),
+            components[4]->Render(),
+        });
+    });
+    // ทำตาม design แล้วค่อยให้เรียก function ตาม user เลือกก็ได้
+    // เช่น user ต้องการออกก็อาจจะใช้ exit(0); หรือต้องการ reset ก็ใช้ ...
+    // exit: https://pubs.opengroup.org/onlinepubs/7908799/xsh/exit.html
+}

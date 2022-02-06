@@ -16,5 +16,5 @@ namespace Scene {
     Component splash(float &brightness); // หน้าโชว์โลโก้
     Component vote(SceneConfiguration &config, const vector<std::string> &list, vector<block> &chain); // หน้าโหวต
     Component error(SceneConfiguration &config); // หน้า error
-    // Component summary(SceneConfiguration &config, const vector<std::string> &list, const vector<block> &chain);
+    Component summary(SceneConfiguration &config, const vector<std::string> &list, const vector<block> &chain);
 }

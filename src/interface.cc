@@ -14,7 +14,7 @@ vector<block> loadRecentChain(int n ,const vector<block> &chain){
     return recent;
 }
 
-vector<int> summary(const vector<block> &chain){
+vector<int> countVote(const vector<block> &chain){
     vector<int> totalSum = {0,0,0,0,0};
 
         for(const block &b : chain){
