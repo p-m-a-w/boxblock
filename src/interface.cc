@@ -1,10 +1,14 @@
 #include "interface.hpp"
 #include "chain.hpp"
+#include <iostream>
+
 
 void submitVote(int choice, vector<block> &chain){
     char data[DATA_SIZE] = {};
     data[0] = '0' + choice;
     addBlockToChain(block(data), chain);
+    createChainFile(FILENAME,chain);
+    cout << chain.size();
 }
 
 vector<block> loadRecentChain(int n ,const vector<block> &chain){

@@ -50,11 +50,13 @@ Component Scene::vote(SceneConfiguration &config, const std::vector<std::string>
     // button: https://arthursonzogni.github.io/FTXUI/examples_2component_2gallery_8cpp-example.html (สังเหตุตรง button)
 }
 
-Component Scene::error(SceneConfiguration &config) { // หน้า error
+Component Scene::error(SceneConfiguration &config,vector<block> &chain) { // หน้า error
     static std::string exit_label = "Exit", reset_label = "Reset";
     static auto exit = Button(&exit_label, config.screen->ExitLoopClosure());
     static auto reset = Button(&reset_label, [&] {
         deleteChain(FILENAME);
+        createChainFile(FILENAME,{});
+        importChain(FILENAME,chain);
         *config.selected_scene = 1;
     });
     static auto layout = Container::Horizontal({

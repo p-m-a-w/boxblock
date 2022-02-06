@@ -7,6 +7,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <cstring>
 #include <cstdint>
 
 bool starterDataCheck(const string filename) {
@@ -15,11 +16,11 @@ bool starterDataCheck(const string filename) {
 }
 
 void createChainFile(const string filename, const vector<block> &chain) {
-    // แนะนำให้ใช้ ofstream สร้างไฟล์เอา
-    // ละอาจจะใช้ for(const block &b : chain) o_stream << b << "\n";
+    deleteChain(filename);
     ofstream source;
     source.open(filename);
-    for(const block &a : chain) source << a << endl;
+    for(const auto &a: chain)source <<  a << endl;
+    source.close();
 }
 
 void addBlockToChain(block current, vector<block> &chain) {
@@ -47,3 +48,4 @@ void deleteChain(const string filename) {
     // include cstdio แล้วใช้ฟังก์ชั่น remove ก็ได้นะ
     remove(filename.c_str());
 }
+
