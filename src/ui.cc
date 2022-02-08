@@ -1,6 +1,7 @@
 #include "ui.hpp"
 #include "image.hpp"
 #include "interface.hpp"
+#include <unistd.h>
 
 Component Scene::splash(float &brightness) { // หน้าโชว์โลโก้
     return Renderer([&] {
@@ -96,6 +97,7 @@ Component Scene::summary(SceneConfiguration &config, const std::vector<std::stri
             n = n+b;
         for (int i = 0; i<5 ; i++ )
             elements[i] = result_bar(list[i], (float)count[i] / n);
+        usleep(5 * 1000); // sleep for 5ms
 
         return vbox({ 
             elements[0],

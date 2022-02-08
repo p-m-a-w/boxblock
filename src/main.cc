@@ -9,7 +9,7 @@
 
 int main() {
     float brightness_step = 10.0 / 1618.0, splash_brigtness = 1.0f + brightness_step;
-    int selected_scene = 1, vote = 0;
+    int selected_scene = 0, vote = 0;
     auto screen = ScreenInteractive::FixedSize(_WIDTH / 1.9, _HEIGHT / 4);
     vector<std::string> candidates = {
         "No vote",

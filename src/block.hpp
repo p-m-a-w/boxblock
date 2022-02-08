@@ -5,7 +5,7 @@
 #include <fstream>
 
 const size_t HASH_SIZE = 1;
-const size_t DATA_SIZE = 32;
+const size_t DATA_SIZE = 30;
 
 class block {
         char p_hash[HASH_SIZE] = {}, c_hash[HASH_SIZE] = {};
