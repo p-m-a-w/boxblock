@@ -45,8 +45,6 @@ int main() {
             else selected_scene++;
         } else if (selected_scene == 1) {
             if (!hashCheck(chain)) selected_scene = 2;
-        } else if (selected_scene == 3) {
-            raise(SIGWINCH);
         }
 
         return hbox({
